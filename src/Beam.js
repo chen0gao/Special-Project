@@ -149,7 +149,8 @@ function Beam(size_, position_){
   function createArrow(parent) {
 
     var origin = createVector(mouseX,parent.forceArea.y)
-    var target = createVector(mouseX,parent.y-10) //-10 for the arrow tip
+    //-10 for the arrow tip
+    var target = createVector(mouseX,parent.y-10)
     parent.Arrow.push(new Arrow(origin, target))
     parent.Arrow[parent.Arrow.length-1].color="green";
     parent.Arrow[parent.Arrow.length-1].grab = false;
@@ -165,8 +166,10 @@ function Beam(size_, position_){
     for(let i = 0;i<parent.Arrow.length;i++) {
 
       if(mode && i==parent.Arrow.length-1) {
-        parent.Arrow[i].origin.x = mouseX; //Move the latest arrow bar
-        parent.Arrow[i].target.x = mouseX; //Move the latest arrow bar
+        //Move the latest arrow bar
+        parent.Arrow[i].origin.x = mouseX;
+        //Move the latest arrow bar
+        parent.Arrow[i].target.x = mouseX;
       }
       parent.Arrow[i].update();
       parent.Arrow[i].display();
@@ -177,7 +180,8 @@ function Beam(size_, position_){
 
     //remove arrow when exit the forceArea
     if(!mode && parent.Arrow[parent.Arrow.length-1] && !parent.Arrow[parent.Arrow.length-1].active && !parent.createArrow) {
-      parent.Arrow.pop() //remove the last arrow
+      //remove the last arrow
+      parent.Arrow.pop()
     } else {
       parent.createArrowClick = false;
     }
@@ -226,12 +230,15 @@ function Beam(size_, position_){
       } else {
         continue;
       }
-      // curveVertex(targetX+x, targetY-target[x]);
+
       if(mode=='shear') {
-        line(targetX+firstX, targetY-firstY, targetX+firstX, targetY-secondY) // vertical line
-        line(targetX+firstX, targetY-secondY, targetX+secondX, targetY-secondY) // horizontal line
+        // vertical line
+        line(targetX+firstX, targetY-firstY, targetX+firstX, targetY-secondY)
+        // horizontal line
+        line(targetX+firstX, targetY-secondY, targetX+secondX, targetY-secondY)
       } else if(mode=='moment') {
-        line(targetX+firstX, targetY-firstY, targetX+secondX, targetY-secondY) // horizontal line
+        // horizontal line
+        line(targetX+firstX, targetY-firstY, targetX+secondX, targetY-secondY)
       }
 
       secondX = false;
@@ -243,7 +250,8 @@ function Beam(size_, position_){
 
 
     if(mode=='shear')
-    line(targetX+firstX, targetY-secondY, targetX+firstX, targetY) // close vertical line
+    // close vertical line
+    line(targetX+firstX, targetY-secondY, targetX+firstX, targetY)
     // else if(mode=='moment') {
     //   line(targetX+firstX, targetY-firstY, targetX+secondX, targetY-secondY) // horizontal line
     // }
@@ -253,6 +261,7 @@ function Beam(size_, position_){
   }
 
   function singularityFn(parent) {
+    //this function calculate the singular equation.
 
     // First, find the force at the edge
     var total = parent.Arrow.filter(index => index.active).length
@@ -283,6 +292,7 @@ function Beam(size_, position_){
   }
 
   function createAxis(type,parent,x,y,magnitude,unit) {
+    //this function create the graph axis.
 
     switch(type) {
       case 'x':
@@ -290,43 +300,52 @@ function Beam(size_, position_){
         fill('rgb(45, 52, 54)');
         textSize(16);
         text(i, x+(i*100) - 3, y - 7);
-        line(x+(i*100), y - 5, x+(i*100), y + 5) // axis line
+        // axis line
+        line(x+(i*100), y - 5, x+(i*100), y + 5)
       }
-      text('Distance (m)', x+(parent.w/100*100+20) - 3, y + 7); // Unit
+      // Unit
+      text('Distance (m)', x+(parent.w/100*100+20) - 3, y + 7);
       break;
 
       case 'y':
-      line(x, y - 50, x, y + 50) // axis line
+      // axis line
+      line(x, y - 50, x, y + 50)
 
       for(let i = 1; i<=magnitude/10;i++) {
 
-        if(i % 2 == 0) //skip even line to avoid massy axis
+        //skip even line to avoid massy axis
+        if(i % 2 == 0)
         continue
 
         fill('rgb(45, 52, 54)');
         textSize(16);
-        text((i*10), x - 30, y - (i*10) + 5); //pos
-        text((i*-10), x - 30 - 5, y + (i*10) + 5); //neg
-        line(x - 5, y -(i*10), x + 5, y -(i*10) ) // axis line
-        line(x - 5, y +(i*10), x + 5, y +(i*10) ) // axis line
+        //pos
+        text((i*10), x - 30, y - (i*10) + 5);
+        //neg
+        text((i*-10), x - 30 - 5, y + (i*10) + 5);
+        // axis line
+        line(x - 5, y -(i*10), x + 5, y -(i*10) )
+        // axis line
+        line(x - 5, y +(i*10), x + 5, y +(i*10) )
       }
       push();
       translate(x-50, y+40);
       rotate(PI*3/2);
-      text(unit, 0, 0); // Unit
+      // Unit
+      text(unit, 0, 0);
       pop();
       break;
     }
   }
 
   function createUI(parent) {
+    //this function create the ui for controlling the arrow.
 
 
     var posY = parent.ui.y;
     text( 'Name ', parent.ui.x, posY);
     text( 'Locat.', parent.ui.x +40 + 20, posY);
     text( 'Magni.', parent.ui.x +100 + 20, posY);
-    // text( 'Delete', parent.ui.x +160 + 20, posY);
     // Arrow UI
     var total = parent.Arrow.filter(index => index.active).length
 
@@ -352,7 +371,7 @@ function Beam(size_, position_){
 
     }
   }
-
+  
   function deleteArrow(parent,arrow,button) {
     var total = parent.Arrow.filter(index => index.active).length
     j = parent.Arrow.indexOf(arrow)
@@ -363,11 +382,7 @@ function Beam(size_, position_){
       btn.position(btn.position().x,  btn.position().y - 30);
     }
     parent.Arrow.splice(j, 1);
-    // parent.ui[j]['text'].remove();
-    // parent.ui[j]['dist'].remove();
-    // parent.ui[j]['value'].remove();
     parent.ui.splice(j, 1);
-    // button.remove(); This is buggy
     button.parentNode.removeChild(button);
     singularityFn(parent)
   }
